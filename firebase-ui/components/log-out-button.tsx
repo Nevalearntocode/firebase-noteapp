@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Button } from "./ui/button";
-import SignOut from "@/firebase/auth/sign-out";
+import { SignOut } from "@/firebase/auth";
 
 type Props = {};
 

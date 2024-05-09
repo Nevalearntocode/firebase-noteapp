@@ -9,3 +9,13 @@ export function cn(...inputs: ClassValue[]) {
 export function formatDate(timestamp: number) {
   return format(fromUnixTime(timestamp), "yyyy-MM-dd HH:mm:ss");
 }
+
+export function onImageUpload(target: EventTarget & HTMLInputElement) {
+  const image = target.files ? target.files[0] : undefined;
+
+  if (!image) {
+    return;
+  }
+
+  return image;
+}

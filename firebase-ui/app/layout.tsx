@@ -4,8 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthContextProvider } from "@/contexts/auth-context";
 import Navbar from "@/components/navbar";
-import AddNoteModal from "@/components/modals/add-note-modal";
 import { NoteContextProvider } from "@/contexts/note-context";
+import ModalProvider from "@/components/providers/modal-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +22,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Toaster />
         <AuthContextProvider>
           <NoteContextProvider>
+            <Toaster />
             <Navbar />
-            <AddNoteModal />
+            <ModalProvider />
             {children}
           </NoteContextProvider>
         </AuthContextProvider>

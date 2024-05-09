@@ -15,10 +15,9 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import signUp from "@/firebase/auth/sign-up";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import SignIn from "@/firebase/auth/sign-in";
+import { SignInWithGoogle, signIn, signUp } from "@/firebase/auth";
 
 type Props = {};
 
@@ -60,10 +59,15 @@ const RegisterForm = (props: Props) => {
 
     toast.success("Sign up successful");
 
-    await SignIn(data);
+    await signIn(data);
 
     router.push(`/`);
   };
+
+  const googleSignIn = async () => {
+    await SignInWithGoogle();
+    router.push(`/`);
+  }
 
   return (
     <Form {...form}>
@@ -116,7 +120,10 @@ const RegisterForm = (props: Props) => {
           <Button disabled={isLoading} type="submit" className="w-full">
             Sign Up
           </Button>
-          <Button disabled={isLoading} variant="outline" className="w-full">
+          <Button disabled={isLoading} variant="outline" className="w-full" onClick={(e) => {
+            e.preventDefault()
+            googleSignIn()
+          }}>
             Sign up with Google
           </Button>
         </div>

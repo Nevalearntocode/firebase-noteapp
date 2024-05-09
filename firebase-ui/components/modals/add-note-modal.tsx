@@ -1,7 +1,7 @@
 "use client";
 
 import { useAddNoteModalStore } from "@/hooks/add-note-store";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Dialog, DialogContent, DialogFooter, DialogTitle } from "../ui/dialog";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,23 +17,24 @@ import {
 } from "@/components/ui/form";
 import { Button } from "../ui/button";
 import { useAuthContext } from "@/contexts/auth-context";
-import addNote from "@/firebase/firestore/add-new-note";
 import { toast } from "sonner";
 import { Textarea } from "../ui/textarea";
+import { addNote } from "@/firebase/firestore/note";
+import ImageUpload from "../image-upload";
 
 type Props = {};
 
-const formSchema = z.object({
+export const formSchema = z.object({
   title: z.string().min(1, { message: "Title is required" }),
   content: z.string().min(1, { message: "Content is required" }),
+  image: z.any().optional(),
 });
 
-type FormType = z.infer<typeof formSchema>;
+export type FormType = z.infer<typeof formSchema>;
 
 const AddNoteModal = (props: Props) => {
   const user = useAuthContext();
   const { isOpen, closeAddNoteModal } = useAddNoteModalStore();
-  const [isClient, setIsClient] = useState(false);
   const form = useForm<FormType>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,20 +42,11 @@ const AddNoteModal = (props: Props) => {
       content: "",
     },
   });
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient || !user) {
-    return null;
-  }
-
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
     try {
-      await addNote(user.uid, data);
+      await addNote(user!.uid, data);
       form.reset();
       closeAddNoteModal();
       toast.success("Note added successfully");
@@ -105,6 +97,22 @@ const AddNoteModal = (props: Props) => {
                       className="border-orange-400"
                       placeholder="New content"
                       {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <ImageUpload
+                      onChange={field.onChange}
+                      onRemove={() => field.onChange("")}
+                      value={field.value}
                     />
                   </FormControl>
                   <FormMessage />

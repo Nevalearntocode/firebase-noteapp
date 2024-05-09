@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import SignIn from "@/firebase/auth/sign-in";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { SignInWithGoogle, signIn } from "@/firebase/auth";
 
 type Props = {};
 
@@ -40,7 +40,7 @@ const LoginForm = (props: Props) => {
   const isLoading = form.formState.isSubmitting;
 
   const onSubmit = async (data: FormType) => {
-    const { error } = await SignIn(data);
+    const { error } = await signIn(data);
 
     if (error) {
       const errorMessage: string = error.message
@@ -54,6 +54,11 @@ const LoginForm = (props: Props) => {
       return;
     }
 
+    router.push(`/`);
+  };
+
+  const googleSignIn = async () => {
+    await SignInWithGoogle();
     router.push(`/`);
   };
 
@@ -96,8 +101,16 @@ const LoginForm = (props: Props) => {
           <Button disabled={isLoading} type="submit" className="w-full">
             Login
           </Button>
-          <Button disabled={isLoading} variant="outline" className="w-full">
-            Sign up with Google
+          <Button
+            disabled={isLoading}
+            variant="outline"
+            className="w-full"
+            onClick={(e) => {
+              e.preventDefault();
+              googleSignIn();
+            }}
+          >
+            Sign in with Google
           </Button>
         </div>
         <div className="mt-4 text-center text-sm">

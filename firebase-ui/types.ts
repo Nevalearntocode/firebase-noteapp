@@ -5,4 +5,6 @@ export type Note = {
     content: string;
     createdAt: Timestamp;
     uid: string;
+    id: string
+    image: string;
 }
