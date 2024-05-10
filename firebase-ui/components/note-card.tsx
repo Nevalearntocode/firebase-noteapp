@@ -51,7 +51,6 @@ const NoteCard = ({ note }: Props) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
   return (
     <>
       {edit ? (
@@ -68,7 +67,7 @@ const NoteCard = ({ note }: Props) => {
               <p>{note.content}</p>
             </div>
             <div>
-              <Image
+              <img
                 src={note.image}
                 alt={note.title}
                 width={200}
